@@ -96,13 +96,6 @@
 
     # Settings
     userSettings = {
-      # General
-      # "editor.fontSize" = 16;
-      # "editor.fontFamily" = "'Jetbrains Mono', 'monospace', monospace";
-      # "terminal.integrated.fontSize" = 14;
-      # "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace', monospace";
-      # "window.zoomLevel" = 1;
-      # "editor.multiCursorModifier" = "ctrlCmd";
       "workbench.startupEditor" = "none";
       "explorer.compactFolders" = false;
       # Whitespace
@@ -115,6 +108,9 @@
       "telemetry.telemetryLevel" = "off";
       "update.showReleaseNotes" = false;
       "terminal.integrated.scrollback" = 50000;
+      "git.autofetch" = true;
+      #"github.gitAuthentication" = false;
+      #"git.useIntegratedAskPass" = false;
     };
 
   };

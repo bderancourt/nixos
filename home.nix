@@ -109,8 +109,6 @@
       "update.showReleaseNotes" = false;
       "terminal.integrated.scrollback" = 50000;
       "git.autofetch" = true;
-      #"github.gitAuthentication" = false;
-      #"git.useIntegratedAskPass" = false;
     };
 
   };
@@ -152,6 +150,10 @@
     };
     "org/gnome/shell/extensions/tiling-assistant" = {
       tiling-popup-all-workspace = true;
+    };
+    "org/gnome/shell/extensions/clipboard-indicator" = {
+      clear-on-boot = true;
+      history-size = 5;
     };
     "org/gnome/desktop/interface" = {
       enable-hot-corners = false;

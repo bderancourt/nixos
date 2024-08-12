@@ -1,39 +1,63 @@
-{ config, pkgs, ... }:
+{ lib, pkgs, ... }: {
+  nixpkgs = {
+    config.allowUnfree = true;
+  };
+  home = {
+    stateVersion = "24.05";
 
-{
-  # TODO please change the username & home directory to your own
-  home.username = "benoit";
-  home.homeDirectory = "/home/benoit";
+    packages = with pkgs; [
+      # gnome
+      gnome3.dconf-editor
+      gnome.seahorse
+      gnomeExtensions.vitals
+      gnomeExtensions.clipboard-indicator
+      gnomeExtensions.appindicator
+      gnomeExtensions.bing-wallpaper-changer
+      gnomeExtensions.tiling-assistant
+      gnomeExtensions.dash-to-dock
+      gnomeExtensions.settingscenter
 
-  # link the configuration file in current directory to the specified location in home directory
-  # home.file.".config/i3/wallpaper.jpg".source = ./wallpaper.jpg;
+      # useful software
+      keepassxc
+      onedrive
+      onedrivegui
+      sublime
+      vlc
+      lact
 
-  # link all files in `./scripts` to `~/.config/i3/scripts`
-  # home.file.".config/i3/scripts" = {
-  #   source = ./scripts;
-  #   recursive = true;   # link recursively
-  #   executable = true;  # make all files executable
-  # };
+      # manage mice
+      libratbag
+      piper
 
-  # encode the file content in nix configuration file directly
-  # home.file.".xxx".text = ''
-  #     xxx
-  # '';
+      # cli
+      htop
+      #free
+      file
+      ncdu
+      fd # https://github.com/sharkdp/fd
+      unzip
+      xclip
+      cloc
+      wget
+      curl
+      lm_sensors
+      usbutils
 
-  # set cursor size and dpi for 4k monitor
-  #xresources.properties = {
-  #  "Xcursor.size" = 16;
-  #  "Xft.dpi" = 172;
-  #};
 
-  # Packages that should be installed to the user profile.
-  home.packages = with pkgs; [
-    keepassxc
-    onedrive
-    onedrivegui
-    sublime
-    firefox
-  ];
+      # nix
+      nixd
+      nixfmt-rfc-style
+
+
+      # language-servers
+      nodePackages.bash-language-server
+      nodePackages.yaml-language-server
+
+      # java
+      jdk21
+
+    ];
+  };
 
   # basic configuration of git, please change to your own
   programs.git = {
@@ -58,17 +82,105 @@
     };
   };
 
-  # This value determines the home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update home Manager without changing this value. See
-  # the home Manager release notes for a list of state version
-  # changes in each release.
-  home.stateVersion = "24.05";
+  programs.vscode = {
+    enable = true;
+    # Extensions
+    extensions = with pkgs.vscode-extensions; [
+      mhutchie.git-graph
+      pkief.material-icon-theme
+      oderwat.indent-rainbow
+      bierner.markdown-emoji
+      bierner.emojisense
+      jnoortheen.nix-ide
+    ];
 
-  # Let home Manager install and manage itself.
-  programs.home-manager.enable = true;
+    # Settings
+    userSettings = {
+      # General
+      # "editor.fontSize" = 16;
+      # "editor.fontFamily" = "'Jetbrains Mono', 'monospace', monospace";
+      # "terminal.integrated.fontSize" = 14;
+      # "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace', monospace";
+      # "window.zoomLevel" = 1;
+      # "editor.multiCursorModifier" = "ctrlCmd";
+      "workbench.startupEditor" = "none";
+      "explorer.compactFolders" = false;
+      # Whitespace
+      "files.trimTrailingWhitespace" = true;
+      "files.trimFinalNewlines" = true;
+      "files.insertFinalNewline" = true;
+      "files.autoSave" = "afterDelay";
+      "diffEditor.ignoreTrimWhitespace" = false;
+      # Other
+      "telemetry.telemetryLevel" = "off";
+      "update.showReleaseNotes" = false;
+      "terminal.integrated.scrollback" = 50000;
+    };
+
+  };
+
+  programs.firefox = {
+    enable = true;
+  };
+
+  programs.ranger = {
+    enable = true;
+  };
+
+   dconf.settings = {
+    "org/gnome/shell" = {
+      disable-user-extensions = false;
+      enabled-extensions = [
+        "drive-menu@gnome-shell-extensions.gcampax.github.com"
+        "window-placement@gnome-shell-extensions.gcampax.github.com"
+        "Vitals@CoreCoding.com"
+        "clipboard-indicator@tudmotu.com"
+        "tiling-assistant@leleat-on-github"
+        "BingWallpaper@ineffable-gmail.com"
+        "appindicatorsupport@rgcjonas.gmail.com"
+        "dash-to-dock@micxgx.gmail.com"
+      ];
+    };
+    "org/gnome/shell/extensions/vitals" = {
+      hot-sensors = [
+        "_processor_usage_"
+        "_memory_usage_"
+        "_temperature_acpi_thermal zone_"
+      ];
+      show-battery = true;
+    };
+    "org/gnome/shell/extensions/dash-to-dock" = {
+      always-center-icons = true;
+      apply-custom-theme = true;
+      show-apps-at-top = true;
+    };
+    "org/gnome/shell/extensions/tiling-assistant" = {
+      tiling-popup-all-workspace = true;
+    };
+    "org/gnome/desktop/interface" = {
+      enable-hot-corners = false;
+      show-battery-percentage = true;
+    };
+    "org/gnome/gnome-system-monitor" = {
+      show-dependencies = true;
+    };
+    # "org/gnome/desktop/peripherals/touchpad" = {
+    #   tap-to-click = true;
+    #   tap-and-drag = false;
+    # };
+    # "org/gnome/desktop/peripherals/mouse" = {
+    #   natural-scroll = true;
+    #   accel-profile = "flat";
+    #   speed = 0.5;
+    # };
+    "org/gnome/desktop/session" = {
+      idle-delay = lib.hm.gvariant.mkUint32 0;
+    };
+    "org/gtk/gtk4/settings/file-chooser" = {
+      show-hidden = true;
+    };
+    "org/gnome/desktop/sound" = {
+      event-sounds = false;
+    };
+  };
 }
-

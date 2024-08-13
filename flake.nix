@@ -11,26 +11,38 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, nixos-hardware, ... }: {
-    nixosConfigurations = {
-      inspiron5515 = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./configuration.nix
+  outputs =
+    inputs@{
+      nixpkgs,
+      home-manager,
+      nixos-hardware,
+      ...
+    }:
+    {
+      nixosConfigurations = {
+        inspiron5515 = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+          };
+          modules = [
+            ./configuration.nix
 
-          # make home-manager as a module of nixos
-          # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
-          home-manager.nixosModules.home-manager {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.benoit = import ./home.nix;
-              extraSpecialArgs = { inherit inputs; };
-            };
-          }
-        ];
+            # make home-manager as a module of nixos
+            # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.benoit = import ./home.nix;
+                extraSpecialArgs = {
+                  inherit inputs;
+                };
+              };
+            }
+          ];
+        };
       };
     };
-  };
 }

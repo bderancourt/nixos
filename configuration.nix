@@ -2,19 +2,29 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ inputs, lib, config, pkgs, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
   system.stateVersion = "24.05";
 
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
     # https://github.com/NixOS/nixos-hardware
     inputs.nixos-hardware.nixosModules.dell-inspiron-5515
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-gpu-amd
-    ];
+  ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -51,22 +61,24 @@
   services.xserver.desktopManager.gnome.enable = true;
   services.gnome.gnome-keyring.enable = lib.mkForce false;
 
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-photos
-    gnome-tour
-    gnome-text-editor
-  ]) ++ (with pkgs.gnome; [
-    gnome-music
-    gnome-contacts
-    gnome-weather
-    gnome-calendar
-    epiphany
-    geary
-    totem
-    yelp
-    simple-scan
-    seahorse
-  ]);
+  environment.gnome.excludePackages =
+    (with pkgs; [
+      gnome-photos
+      gnome-tour
+      gnome-text-editor
+    ])
+    ++ (with pkgs.gnome; [
+      gnome-music
+      gnome-contacts
+      gnome-weather
+      gnome-calendar
+      epiphany
+      geary
+      totem
+      yelp
+      simple-scan
+      seahorse
+    ]);
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -103,7 +115,10 @@
     benoit = {
       isNormalUser = true;
       description = "benoit";
-      extraGroups = [ "networkmanager" "wheel" ];
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+      ];
     };
     # Disable root
     root.hashedPassword = "!";
@@ -133,6 +148,7 @@
   environment.systemPackages = with pkgs; [
     vim
     git
+    snowfallorg.flake
   ];
 
   # Set the default editor to vim

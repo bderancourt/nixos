@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   curaAppImage = pkgs.fetchurl {
@@ -8,7 +13,7 @@ let
   curaIcon = pkgs.fetchurl {
     url = "https://github.com/Ultimaker/Cura/blob/3707158b033e033c9f62e1ceaef91aa56bbf45a8/resources/images/cura-icon.png?raw=true";
     sha256 = "sha256:0b4zwby81q3h0cvwhmj3isg170xzflik2qjzs1p35wvkzbl1mkz0";
-};
+  };
 in
 {
   nixpkgs = {
@@ -38,24 +43,20 @@ in
       gimp
 
       # cli
-      htop
-      #free
-      file
       ncdu
       fd # https://github.com/sharkdp/fd
       unzip
-      xclip
       cloc
       wget
       curl
       lm_sensors
       usbutils
-
+      pciutils
+      btop
 
       # nix
       nixd
       nixfmt-rfc-style
-
 
       # language-servers
       nodePackages.bash-language-server
@@ -81,7 +82,7 @@ in
     terminal = false;
     type = "Application";
     icon = "cura-icon.png";
-    categories = ["Utility"];
+    categories = [ "Utility" ];
   };
 
   # basic configuration of git, please change to your own
@@ -134,6 +135,7 @@ in
       "update.showReleaseNotes" = false;
       "terminal.integrated.scrollback" = 50000;
       "git.autofetch" = true;
+      "nix.enableLanguageServer" = true;
     };
 
   };
@@ -146,7 +148,7 @@ in
     enable = true;
   };
 
-   dconf.settings = {
+  dconf.settings = {
     "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = [

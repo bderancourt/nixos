@@ -136,6 +136,7 @@ in
       "terminal.integrated.scrollback" = 50000;
       "git.autofetch" = true;
       "nix.enableLanguageServer" = true;
+      "nix.serverPath" = "nixd";
     };
 
   };

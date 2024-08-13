@@ -148,20 +148,10 @@
   environment.systemPackages = with pkgs; [
     vim
     git
-    snowfallorg.flake
   ];
 
   # Set the default editor to vim
   environment.variables.EDITOR = "vim";
 
   programs.ssh.startAgent = true;
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 }

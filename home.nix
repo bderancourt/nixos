@@ -1,4 +1,13 @@
-{ lib, pkgs, ... }: {
+{ lib, config, pkgs, ... }:
+
+let
+  curaAppImage = pkgs.fetchurl {
+    url = "https://github.com/Ultimaker/Cura/releases/download/5.8.0/UltiMaker-Cura-5.8.0-linux-X64.AppImage";
+    sha256 = "1s1cakmj97w3j1xf0jvh7g3m6r40s26hbfa4s2y7bqx8xw0xb20j";
+  };
+  curaIconFile = builtins.toPath ./dot_files/cura-icon.png;
+in
+{
   nixpkgs = {
     config.allowUnfree = true;
   };
@@ -24,10 +33,11 @@
       sublime
       vlc
       lact
+      gimp
 
-      # manage mice
-      libratbag
-      piper
+      # flatpack
+      flatpak
+      gnome.gnome-software
 
       # cli
       htop
@@ -56,7 +66,25 @@
       # java
       jdk21
 
+      (appimageTools.wrapType2 {
+        name = "cura";
+        src = curaAppImage;
+      })
     ];
+  };
+
+  home.file.curaIcon = {
+    source = curaIconFile;
+    target = ".icons/hicolor/48x48/cura-icon.png";
+  };
+
+  xdg.desktopEntries.cura = {
+    name = "Cura";
+    exec = "cura";
+    terminal = false;
+    type = "Application";
+    icon = "cura-icon.png";
+    categories = ["Utility"];
   };
 
   # basic configuration of git, please change to your own
@@ -162,15 +190,6 @@
     "org/gnome/gnome-system-monitor" = {
       show-dependencies = true;
     };
-    # "org/gnome/desktop/peripherals/touchpad" = {
-    #   tap-to-click = true;
-    #   tap-and-drag = false;
-    # };
-    # "org/gnome/desktop/peripherals/mouse" = {
-    #   natural-scroll = true;
-    #   accel-profile = "flat";
-    #   speed = 0.5;
-    # };
     "org/gnome/desktop/session" = {
       idle-delay = lib.hm.gvariant.mkUint32 0;
     };
@@ -181,4 +200,5 @@
       event-sounds = false;
     };
   };
+
 }

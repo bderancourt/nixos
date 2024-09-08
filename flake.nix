@@ -15,7 +15,6 @@
     inputs@{
       nixpkgs,
       home-manager,
-      nixos-hardware,
       ...
     }:
     {

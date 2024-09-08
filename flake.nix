@@ -37,7 +37,7 @@
             inherit inputs;
           };
           modules = [
-            ./hosts/inspiron5515/configuration.nix
+            ./nixos/hosts/inspiron5515/configuration.nix
 
             # make home-manager as a module of nixos
             # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
@@ -46,7 +46,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                users.benoit = import ./homes/benoit.nix;
+                users.benoit = import ./home-manager/homes/benoit.nix;
                 extraSpecialArgs = {
                   inherit inputs;
                 };

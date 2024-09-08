@@ -3,18 +3,12 @@
   pkgs,
   ...
 }:
-
-let
-  curaAppImage = pkgs.fetchurl {
-    url = "https://github.com/Ultimaker/Cura/releases/download/5.8.0/UltiMaker-Cura-5.8.0-linux-X64.AppImage";
-    sha256 = "1s1cakmj97w3j1xf0jvh7g3m6r40s26hbfa4s2y7bqx8xw0xb20j";
-  };
-  curaIcon = pkgs.fetchurl {
-    url = "https://github.com/Ultimaker/Cura/blob/3707158b033e033c9f62e1ceaef91aa56bbf45a8/resources/images/cura-icon.png?raw=true";
-    sha256 = "sha256:0b4zwby81q3h0cvwhmj3isg170xzflik2qjzs1p35wvkzbl1mkz0";
-  };
-in
 {
+  imports = [
+    ../modules/default.nix
+  ];
+  cura.enable = true;
+
   nixpkgs = {
     config.allowUnfree = true;
   };
@@ -63,29 +57,11 @@ in
 
       # java
       jdk21
-
-      (appimageTools.wrapType2 {
-        name = "cura";
-        src = curaAppImage;
-      })
     ];
   };
 
   home.sessionVariables = {
     FLAKE = "$HOME/nixos";
-  };
-
-  home.file.".icons/cura-icon.png" = {
-    source = curaIcon;
-  };
-
-  xdg.desktopEntries.cura = {
-    name = "Cura";
-    exec = "cura";
-    terminal = false;
-    type = "Application";
-    icon = "cura-icon.png";
-    categories = [ "Utility" ];
   };
 
   # basic configuration of git, please change to your own
@@ -141,16 +117,10 @@ in
       "nix.enableLanguageServer" = true;
       "nix.serverPath" = "nixd";
     };
-
   };
 
-  programs.firefox = {
-    enable = true;
-  };
-
-  programs.ranger = {
-    enable = true;
-  };
+  programs.firefox.enable = true;
+  programs.ranger.enable = true;
 
   dconf.settings = {
     "org/gnome/shell" = {

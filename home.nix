@@ -71,6 +71,10 @@ in
     ];
   };
 
+  home.sessionVariables = {
+    FLAKE = "$HOME/nixos";
+  };
+
   home.file.".icons/cura-icon.png" = {
     source = curaIcon;
   };
@@ -176,7 +180,8 @@ in
       show-apps-at-top = true;
     };
     "org/gnome/shell/extensions/tiling-assistant" = {
-      tiling-popup-all-workspace = true;
+      tiling-popup-all-workspace = false;
+      enable-tiling-popup = false;
     };
     "org/gnome/shell/extensions/clipboard-indicator" = {
       clear-on-boot = true;

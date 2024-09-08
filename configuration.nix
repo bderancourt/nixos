@@ -25,9 +25,19 @@
     "flakes"
   ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  nix.gc = {
+    automatic = true;
+    persistent = true;
+    options = "--delete-older-than +5";
+    dates = "daily";
+  };
+
+  # Bootloader
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+    systemd-boot.configurationLimit = 5;
+  };
 
   networking.hostName = "inspiron5515"; # Define your hostname.
 
@@ -147,6 +157,7 @@
   environment.systemPackages = with pkgs; [
     vim
     git
+    nh
   ];
 
   # Set the default editor to vim

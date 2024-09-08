@@ -10,54 +10,51 @@
   cura.enable = true;
 
   nixpkgs.config.allowUnfree = true;
+  home.stateVersion = "24.05";
 
-  home = {
-    stateVersion = "24.05";
+  home.packages = with pkgs; [
+    # gnome
+    gnome3.dconf-editor
+    gnome.seahorse
+    gnomeExtensions.vitals
+    gnomeExtensions.clipboard-indicator
+    gnomeExtensions.appindicator
+    gnomeExtensions.bing-wallpaper-changer
+    gnomeExtensions.tiling-assistant
+    gnomeExtensions.dash-to-dock
 
-    packages = with pkgs; [
-      # gnome
-      gnome3.dconf-editor
-      gnome.seahorse
-      gnomeExtensions.vitals
-      gnomeExtensions.clipboard-indicator
-      gnomeExtensions.appindicator
-      gnomeExtensions.bing-wallpaper-changer
-      gnomeExtensions.tiling-assistant
-      gnomeExtensions.dash-to-dock
+    # useful software
+    keepassxc
+    onedrive
+    onedrivegui
+    sublime
+    vlc
+    lact
+    gimp
 
-      # useful software
-      keepassxc
-      onedrive
-      onedrivegui
-      sublime
-      vlc
-      lact
-      gimp
+    # cli
+    ncdu
+    fd # https://github.com/sharkdp/fd
+    unzip
+    cloc
+    wget
+    curl
+    lm_sensors
+    usbutils
+    pciutils
+    btop
 
-      # cli
-      ncdu
-      fd # https://github.com/sharkdp/fd
-      unzip
-      cloc
-      wget
-      curl
-      lm_sensors
-      usbutils
-      pciutils
-      btop
+    # nix
+    nixd
+    nixfmt-rfc-style
 
-      # nix
-      nixd
-      nixfmt-rfc-style
+    # language-servers
+    nodePackages.bash-language-server
+    nodePackages.yaml-language-server
 
-      # language-servers
-      nodePackages.bash-language-server
-      nodePackages.yaml-language-server
-
-      # java
-      jdk21
-    ];
-  };
+    # java
+    jdk21
+  ];
 
   home.sessionVariables = {
     FLAKE = "$HOME/nixos";

@@ -1,0 +1,3 @@
+{
+  cura = import ./cura.nix;
+}

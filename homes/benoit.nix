@@ -1,21 +1,13 @@
+{ lib, pkgs, ... }:
 {
-  lib,
-  pkgs,
-  ...
-}:
-{
-  imports = [
-    ../modules/default.nix
-  ];
+  imports = [ ../modules/default.nix ];
   cura.enable = true;
 
-  nixpkgs.config.allowUnfree = true;
   home.stateVersion = "24.05";
 
   home.packages = with pkgs; [
     # gnome
     gnome3.dconf-editor
-    gnome.seahorse
     gnomeExtensions.vitals
     gnomeExtensions.clipboard-indicator
     gnomeExtensions.appindicator
@@ -31,6 +23,9 @@
     vlc
     lact
     gimp
+    terminator
+    libreoffice
+    (lshw.override { withGUI = true; })
 
     # cli
     ncdu
@@ -43,6 +38,7 @@
     usbutils
     pciutils
     btop
+    nvme-cli
 
     # nix
     nixd
@@ -112,6 +108,13 @@
       "git.autofetch" = true;
       "nix.enableLanguageServer" = true;
       "nix.serverPath" = "nixd";
+      "nix.serverSettings" = {
+        "nixd" = {
+          "formatting" = {
+            "command" = [ "nixfmt" ];
+          };
+        };
+      };
     };
   };
 

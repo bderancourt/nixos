@@ -1,9 +1,16 @@
-{ lib, pkgs, config, ... }:{
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+{
   # Declare what settings a user of this "hello.nix" module CAN SET.
   options.cura.enable = lib.mkEnableOption "Enables Cura program";
 
   config = lib.mkIf config.cura.enable {
-    home.packages = [ (pkgs.appimageTools.wrapType2 {
+    home.packages = [
+      (pkgs.appimageTools.wrapType2 {
         name = "cura";
         src = pkgs.fetchurl {
           url = "https://github.com/Ultimaker/Cura/releases/download/5.8.0/UltiMaker-Cura-5.8.0-linux-X64.AppImage";

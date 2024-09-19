@@ -1,6 +1,5 @@
 { lib, pkgs, ... }:
 {
-  imports = [ ../modules/default.nix ];
   cura.enable = true;
 
   home.stateVersion = "24.05";

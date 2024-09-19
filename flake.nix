@@ -22,7 +22,12 @@
     {
       self,
       nixpkgs,
+      nixpkgs-unstable,
+      nixos-hardware,
       home-manager,
+      sops-nix,
+      firefox-addons,
+      nur,
       lib,
       ...
     }@inputs:
@@ -50,12 +55,12 @@
       homeManagerModules = import ./modules/home-manager;
 
       nixosConfigurations = {
-        inspiron5515 = nixpkgs.lib.nixosSystem {
+        minipc-gaming = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
           };
           modules = [
-            ./nixos/hosts/inspiron5515/configuration.nix
+            ./hosts/um890/configuration.nix
 
             # make home-manager as a module of nixos
             # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
@@ -64,7 +69,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                users.benoit = import ./home-manager/homes/benoit.nix;
+                users.benoit = import ./homes/benoit.nix;
                 extraSpecialArgs = {
                   inherit inputs outputs;
                 };

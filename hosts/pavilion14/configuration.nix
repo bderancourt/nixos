@@ -2,8 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ inputs, lib, config, pkgs, ... }:
-
+{ inputs, lib, pkgs, ... }:
 {
   system.stateVersion = "24.05";
 
@@ -19,7 +18,7 @@
     inputs.nixos-hardware.nixosModules.common-gpu-amd
   ];
 
-  config.services.thermald.enable = mkDefault true;
+  services.thermald.enable = lib.mkDefault true;
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   nix.settings.experimental-features = [
@@ -171,4 +170,5 @@
   # Set the default editor to vim
   environment.variables.EDITOR = "vim";
 
+  programs.ssh.startAgent = true;
 }

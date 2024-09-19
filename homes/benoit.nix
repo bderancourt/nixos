@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 {
-  cura.enable = true;
+  #cura.enable = true;
 
   home.stateVersion = "24.05";
 

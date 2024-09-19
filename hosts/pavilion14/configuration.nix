@@ -2,19 +2,46 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ inputs, lib, config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
+  system.stateVersion = "24.05";
+
+  imports = [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-    ];
+    inputs.nixos-hardware.nixosModules.common-hidpi
+    inputs.nixos-hardware.nixosModules.common-pc
+    inputs.nixos-hardware.nixosModules.common-pc-laptop
+    inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+    inputs.nixos-hardware.nixosModules.common-pc-laptop-acpi_call
+    inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+    inputs.nixos-hardware.nixosModules.common-gpu-amd
+  ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  config.services.thermald.enable = mkDefault true;
+  services.xserver.videoDrivers = [ "amdgpu" ];
 
-  networking.hostName = "laptop-benoit"; # Define your hostname.
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
+  nix.gc = {
+    automatic = true;
+    persistent = true;
+    options = "--delete-older-than +5";
+    dates = "daily";
+  };
+
+  # Bootloader
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+    systemd-boot.configurationLimit = 5;
+  };
+
+  networking.hostName = "pavilion14"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -48,6 +75,26 @@
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
+  services.gnome.gnome-keyring.enable = lib.mkForce false;
+
+  environment.gnome.excludePackages =
+    (with pkgs; [
+      gnome-photos
+      gnome-tour
+      gnome-text-editor
+    ])
+    ++ (with pkgs.gnome; [
+      gnome-music
+      gnome-contacts
+      gnome-weather
+      gnome-calendar
+      epiphany
+      geary
+      totem
+      yelp
+      simple-scan
+      seahorse
+    ]);
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -81,31 +128,34 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.benoit = {
-    isNormalUser = true;
-    description = "benoit";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-    #  thunderbird
-    terminator
-    git
-    vscode
-    keepassxc
-    onedrive
-    onedrivegui
-    ];
+  users.users = {
+    benoit = {
+      isNormalUser = true;
+      description = "benoit";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+      ];
+    };
+    # Disable root
+    root.hashedPassword = "!";
   };
 
   # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = "benoit";
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "benoit";
+  };
+
+  security.sudo.wheelNeedsPassword = false;
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
 
-  # Install firefox.
-  programs.firefox.enable = true;
+  # Uninstall some default packages
+  programs.nano.enable = false;
+  services.xserver.excludePackages = [ pkgs.xterm ];
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -118,31 +168,7 @@
   vim
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
+  # Set the default editor to vim
+  environment.variables.EDITOR = "vim";
 
 }

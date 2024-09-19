@@ -1,3 +1,6 @@
 {
-  cura = import ./cura.nix;
+  imports =
+    [
+      ./cura.nix
+    ];
 }

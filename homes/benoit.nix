@@ -1,6 +1,7 @@
 { lib, pkgs, ... }:
 {
-  #cura.enable = true;
+
+  # cura.enable = true;
 
   home.stateVersion = "24.05";
 
@@ -42,6 +43,7 @@
     # nix
     nixd
     nixfmt-rfc-style
+    nh
 
     # language-servers
     nodePackages.bash-language-server

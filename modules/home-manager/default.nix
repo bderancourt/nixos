@@ -1,5 +1,0 @@
-{
-  import = [
-    ./cura.nix
-  ];
-}

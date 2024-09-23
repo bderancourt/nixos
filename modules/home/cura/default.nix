@@ -2,13 +2,17 @@
   lib,
   pkgs,
   config,
+  namespace,
   ...
 }:
+let
+  inherit (lib) mkEnableOption mkIf;
+  cfg = config.${namespace}.cura;
+in
 {
-  # Declare what settings a user of this "hello.nix" module CAN SET.
-  options.cura.enable = lib.mkEnableOption "Enables Cura program";
+  options.${namespace}.cura.enable = mkEnableOption "Ultimaker Cura";
 
-  config = lib.mkIf config.cura.enable {
+  config = mkIf cfg.enable {
     home.packages = [
       (pkgs.appimageTools.wrapType2 {
         name = "cura";

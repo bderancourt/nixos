@@ -1,26 +1,20 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
+{ inputs, pkgs, lib, ... }:
 {
-  inputs,
-  lib,
-  pkgs,
-  ...
-}:
-{
-  system.stateVersion = "24.05";
 
-  imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
-    # https://github.com/NixOS/nixos-hardware
-    inputs.nixos-hardware.nixosModules.common-pc
-    inputs.nixos-hardware.nixosModules.common-pc-ssd
+  imports = [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
     inputs.nixos-hardware.nixosModules.common-hidpi
+    inputs.nixos-hardware.nixosModules.common-pc
+    inputs.nixos-hardware.nixosModules.common-pc-laptop
+    inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+    inputs.nixos-hardware.nixosModules.common-pc-laptop-acpi_call
     inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
     inputs.nixos-hardware.nixosModules.common-gpu-amd
   ];
+
+  services.thermald.enable = lib.mkDefault true;
+  services.xserver.videoDrivers = [ "amdgpu" ];
 
   nix.settings.experimental-features = [
     "nix-command"
@@ -41,8 +35,12 @@
     systemd-boot.configurationLimit = 5;
   };
 
-  networking.hostName = "minipc-gaming"; # Define your hostname.
+  networking.hostName = "pavilion14"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -168,5 +166,7 @@
   environment.variables.EDITOR = "vim";
 
   programs.ssh.startAgent = true;
-
+  # ======================== DO NOT CHANGE THIS ========================
+  system.stateVersion = "24.05";
+  # ======================== DO NOT CHANGE THIS ========================
 }

@@ -51,6 +51,9 @@ in
         enable-hot-corners = false;
         show-battery-percentage = true;
       };
+      "org/gnome/desktop/wm/preferences" = {
+        button-layout = "appmenu:minimize,maximize,close";
+      };
       "org/gnome/gnome-system-monitor" = {
         show-dependencies = true;
       };

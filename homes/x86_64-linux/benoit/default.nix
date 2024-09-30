@@ -7,6 +7,8 @@
     cura.enable = true;
     vscode.enable = true;
     gnome-custom.enable = true;
+    git.enable = true;
+    bash.enable = true;
   };
 
   home.stateVersion = "24.05";
@@ -14,6 +16,7 @@
   home.packages = with pkgs; [
     # gnome
     gnome3.dconf-editor
+    gnome3.gnome-boxes
     gnomeExtensions.vitals
     gnomeExtensions.clipboard-indicator
     gnomeExtensions.appindicator
@@ -31,7 +34,7 @@
     gimp
     terminator
     libreoffice
-    (lshw.override { withGUI = true; })
+    molotov
 
     # cli
     ncdu
@@ -61,29 +64,6 @@
 
   home.sessionVariables = {
     FLAKE = "$HOME/nixos";
-  };
-
-  # basic configuration of git, please change to your own
-  programs.git = {
-    enable = true;
-    userName = "Benoit DE RANCOURT";
-    userEmail = "b2rancourt@gmail.com";
-  };
-
-  programs.bash = {
-    enable = true;
-    enableCompletion = true;
-    # TODO add your custom bashrc here
-    #bashrcExtra = ''
-    #  export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
-    #'';
-
-    # set some aliases, feel free to add more or remove some
-    shellAliases = {
-      k = "kubectl";
-      urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
-      urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
-    };
   };
 
   programs.firefox.enable = true;

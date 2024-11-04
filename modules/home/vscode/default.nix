@@ -15,6 +15,8 @@ in
   config = mkIf cfg.enable {
     programs.vscode = {
       enable = true;
+      enableExtensionUpdateCheck = false;
+      enableUpdateCheck = false;
       # Extensions
       extensions = with pkgs.vscode-extensions; [
         mhutchie.git-graph

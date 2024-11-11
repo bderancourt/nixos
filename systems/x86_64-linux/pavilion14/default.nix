@@ -1,4 +1,4 @@
-{ inputs, pkgs, lib, ... }:
+{ inputs, pkgs, lib, config, ... }:
 {
 
   imports = [ # Include the results of the hardware scan.
@@ -29,10 +29,30 @@
   };
 
   # Bootloader
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-    systemd-boot.configurationLimit = 5;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+      systemd-boot.configurationLimit = 5;
+    };
+
+    # https://git.exozy.me/a/zenpower3
+    extraModulePackages = with config.boot.kernelPackages; [ zenpower ];
+
+    kernelParams = [
+      "quiet"
+      "splash"
+      "btusb.enable_autosuspend=0"
+      "usbcore.autosuspend=-1"
+      "nvme.noacpi=1"
+      "amd_pstate=active"
+      "mem_sleep_default=s2idle"
+      "amdgpu.sg_display=0"
+      "amdgpu.abmlevel=3"
+    ];
+    blacklistedKernelModules = [ "hid_logitech_hidpp" ];
   };
 
   networking.hostName = "pavilion14"; # Define your hostname.
